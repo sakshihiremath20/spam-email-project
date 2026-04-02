@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Models — SpamShield</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"/>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet"/>
+  <link rel="stylesheet" href="/static/style.css"/>
+</head>
+<body>
+<div class="layout">
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-brand" style="flex-direction:column;align-items:center;padding:20px 16px 14px;gap:6px;">
+      <div class="gnk-logo" style="font-size:22px;font-weight:800;letter-spacing:2px;color:#fff;background:linear-gradient(135deg,#2563eb,#7c3aed);border-radius:10px;padding:6px 14px;font-family:Inter,sans-serif;box-shadow:0 2px 10px rgba(37,99,235,0.4);">GNK</div><div class="brand-icon" style="display:none"><i class="fas fa-shield-alt"></i></div>
+      <span class="brand-text">SpamShield</span>
+    </div>
+    <nav class="sidebar-nav">
+      <a href="/" class="nav-item"><i class="fas fa-home"></i><span>Home</span></a>
+      <a href="/detect" class="nav-item"><i class="fas fa-envelope"></i><span>Detection</span></a>
+      <a href="/preprocess-page" class="nav-item"><i class="fas fa-cogs"></i><span>Preprocessing</span></a>
+      <a href="/models-page" class="nav-item active"><i class="fas fa-chart-bar"></i><span>Models</span></a>
+      <a href="/dashboard-page" class="nav-item"><i class="fas fa-chart-line"></i><span>Dashboard</span></a>
+    </nav>
+    <div class="sidebar-footer">
+      <div class="user-info">
+        <div class="user-avatar">AI</div>
+        <div><div class="user-name">SpamShield v1.0</div><div class="user-role">ML Powered</div></div>
+      </div>
+    </div>
+  </aside>
+
+  <main class="main-content">
+    <div class="topbar">
+      <button class="sidebar-toggle" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button>
+      <div class="topbar-title">
+        <h1>Model Comparison</h1>
+        <p>Performance metrics across all trained models</p>
+      </div>
+    </div>
+
+    <!-- BEST MODEL BANNER -->
+    <div class="best-model-banner" id="bestBanner">
+      <div class="bm-icon"><i class="fas fa-trophy"></i></div>
+      <div>
+        <div class="bm-title">Best Performing Model</div>
+        <div class="bm-sub" id="bestModelName">Loading...</div>
+      </div>
+      <div class="bm-acc" id="bestModelAcc">—</div>
+    </div>
+
+    <!-- TOP METRIC CARDS -->
+    <div class="metrics-top-grid" id="metricsTopGrid">
+      <div class="mtc-card">
+        <div class="mtc-icon" style="background:#eff6ff;color:#2563eb"><i class="fas fa-bullseye"></i></div>
+        <div class="mtc-info">
+          <div class="mtc-label">Best Accuracy</div>
+          <div class="mtc-val" id="bestAcc">—</div>
+        </div>
+      </div>
+      <div class="mtc-card">
+        <div class="mtc-icon" style="background:#f0fdf4;color:#059669"><i class="fas fa-crosshairs"></i></div>
+        <div class="mtc-info">
+          <div class="mtc-label">Best Precision</div>
+          <div class="mtc-val" id="bestPrec">—</div>
+        </div>
+      </div>
+      <div class="mtc-card">
+        <div class="mtc-icon" style="background:#fff7ed;color:#d97706"><i class="fas fa-magnet"></i></div>
+        <div class="mtc-info">
+          <div class="mtc-label">Best Recall</div>
+          <div class="mtc-val" id="bestRec">—</div>
+        </div>
+      </div>
+      <div class="mtc-card">
+        <div class="mtc-icon" style="background:#fdf4ff;color:#7c3aed"><i class="fas fa-layer-group"></i></div>
+        <div class="mtc-info">
+          <div class="mtc-label">Total Models</div>
+          <div class="mtc-val">2</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- COMPARISON TABLE -->
+    <div class="table-card">
+      <div class="card-header-custom">
+        <i class="fas fa-table"></i>
+        <span>Detailed Model Comparison</span>
+      </div>
+      <div class="table-responsive">
+        <table class="comparison-table" id="compTable">
+          <thead>
+            <tr>
+              <th>Model</th>
+              <th>Accuracy</th>
+              <th>Precision</th>
+              <th>Recall</th>
+              <th>F1 Score</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody id="compTableBody">
+            <tr><td colspan="6" class="loading-row"><i class="fas fa-spinner fa-spin"></i> Loading metrics...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- CHARTS ROW -->
+    <div class="charts-row">
+      <div class="chart-card">
+        <div class="card-header-custom">
+          <i class="fas fa-chart-bar"></i>
+          <span>Accuracy Comparison</span>
+        </div>
+        <div style="position:relative;height:280px">
+          <canvas id="accChart"></canvas>
+        </div>
+      </div>
+      <div class="chart-card">
+        <div class="card-header-custom">
+          <i class="fas fa-chart-radar"></i>
+          <span>Metrics Comparison</span>
+        </div>
+        <div style="position:relative;height:280px">
+          <canvas id="radarChart"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <!-- CONFUSION MATRICES -->
+    <h3 class="section-title">Confusion Matrices</h3>
+    <div class="cm-grid" id="cmGrid"></div>
+
+    <!-- MODEL CARDS -->
+    <h3 class="section-title">Model Details</h3>
+    <div class="model-cards-grid" id="modelCardsGrid"></div>
+  </main>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<script src="/static/app.js"></script>
+<script src="/static/charts.js"></script>
+<script>
+const MODEL_LABELS = {
+  naive_bayes: 'Naive Bayes',
+  logistic_regression: 'Logistic Regression'
+};
+const MODEL_ICONS = {
+  naive_bayes: 'fa-brain',
+  logistic_regression: 'fa-chart-line'
+};
+const MODEL_COLORS = ['#2563eb','#059669'];
+const MODEL_DESC = {
+  naive_bayes: 'Probabilistic classifier based on Bayes theorem with strong independence assumptions.',
+  logistic_regression: 'Linear model for binary classification using logistic sigmoid function.'
+};
+
+async function loadMetrics() {
+  const res = await fetch('/model-metrics');
+  const data = await res.json();
+  const entries = Object.entries(data);
+
+  // Find bests
+  let bestAcc = 0, bestPrec = 0, bestRec = 0, bestModelName = '', bestModelAcc = 0;
+  entries.forEach(([name, m]) => {
+    if (m.accuracy > bestAcc) { bestAcc = m.accuracy; bestModelName = name; bestModelAcc = m.accuracy; }
+    if (m.precision > bestPrec) bestPrec = m.precision;
+    if (m.recall > bestRec) bestRec = m.recall;
+  });
+
+  document.getElementById('bestModelName').textContent = MODEL_LABELS[bestModelName] || bestModelName;
+  document.getElementById('bestModelAcc').textContent = bestModelAcc + '%';
+  document.getElementById('bestAcc').textContent = bestAcc + '%';
+  document.getElementById('bestPrec').textContent = bestPrec + '%';
+  document.getElementById('bestRec').textContent = bestRec + '%';
+
+  // Table
+  const tbody = document.getElementById('compTableBody');
+  tbody.innerHTML = entries.map(([name, m]) => {
+    const f1 = ((2 * m.precision * m.recall) / (m.precision + m.recall)).toFixed(2);
+    const isBest = name === bestModelName;
+    return `
+      <tr class="${isBest ? 'best-row' : ''}">
+        <td><div class="model-name-cell">
+          <i class="fas ${MODEL_ICONS[name] || 'fa-robot'}"></i>
+          ${MODEL_LABELS[name] || name}
+          ${isBest ? '<span class="best-tag">Best</span>' : ''}
+        </div></td>
+        <td><div class="metric-cell"><div class="metric-bar" style="width:${m.accuracy}%;background:#2563eb"></div><span>${m.accuracy}%</span></div></td>
+        <td><div class="metric-cell"><div class="metric-bar" style="width:${m.precision}%;background:#059669"></div><span>${m.precision}%</span></div></td>
+        <td><div class="metric-cell"><div class="metric-bar" style="width:${m.recall}%;background:#d97706"></div><span>${m.recall}%</span></div></td>
+        <td>${f1}%</td>
+        <td><span class="status-ok">✓ Trained</span></td>
+      </tr>
+    `;
+  }).join('');
+
+  // Bar chart
+  const labels = entries.map(([n]) => MODEL_LABELS[n] || n);
+  const accData = entries.map(([,m]) => m.accuracy);
+  const precData = entries.map(([,m]) => m.precision);
+  const recData = entries.map(([,m]) => m.recall);
+
+  new Chart(document.getElementById('accChart'), {
+    type: 'bar',
+    data: {
+      labels,
+      datasets: [
+        { label: 'Accuracy', data: accData, backgroundColor: '#2563eb', borderRadius: 6 },
+        { label: 'Precision', data: precData, backgroundColor: '#059669', borderRadius: 6 },
+        { label: 'Recall', data: recData, backgroundColor: '#d97706', borderRadius: 6 }
+      ]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { position: 'top', labels: { font: { size: 12, family: 'Inter' } } } },
+      scales: {
+        y: { min: 90, max: 100, ticks: { callback: v => v + '%', font: { size: 11 } }, grid: { color: '#f1f5f9' } },
+        x: { ticks: { font: { size: 11 } }, grid: { display: false } }
+      }
+    }
+  });
+
+  // Radar chart
+  new Chart(document.getElementById('radarChart'), {
+    type: 'radar',
+    data: {
+      labels: ['Accuracy', 'Precision', 'Recall', 'F1 Score'],
+      datasets: entries.map(([name, m], i) => {
+        const f1 = ((2 * m.precision * m.recall) / (m.precision + m.recall));
+        return {
+          label: MODEL_LABELS[name] || name,
+          data: [m.accuracy, m.precision, m.recall, parseFloat(f1.toFixed(2))],
+          borderColor: MODEL_COLORS[i],
+          backgroundColor: MODEL_COLORS[i] + '22',
+          pointBackgroundColor: MODEL_COLORS[i],
+          borderWidth: 2
+        };
+      })
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { position: 'top', labels: { font: { size: 12, family: 'Inter' } } } },
+      scales: { r: { min: 90, max: 100, ticks: { font: { size: 10 } } } }
+    }
+  });
+
+  // Confusion matrices
+  const cmGrid = document.getElementById('cmGrid');
+  cmGrid.innerHTML = entries.map(([name, m]) => {
+    const cm = m.confusion_matrix;
+    if (!cm) return '';
+    const [[tn, fp], [fn, tp]] = cm;
+    return `
+      <div class="cm-card">
+        <div class="cm-title">${MODEL_LABELS[name] || name}</div>
+        <div class="cm-matrix">
+          <div class="cm-header-row"><span></span><span class="cm-col-head">Pred Ham</span><span class="cm-col-head">Pred Spam</span></div>
+          <div class="cm-row"><span class="cm-row-head">Actual Ham</span><span class="cm-cell tn">${tn}<div class="cm-cell-label">TN</div></span><span class="cm-cell fp">${fp}<div class="cm-cell-label">FP</div></span></div>
+          <div class="cm-row"><span class="cm-row-head">Actual Spam</span><span class="cm-cell fn">${fn}<div class="cm-cell-label">FN</div></span><span class="cm-cell tp">${tp}<div class="cm-cell-label">TP</div></span></div>
+        </div>
+      </div>
+    `;
+  }).join('');
+
+  // Model detail cards
+  const grid = document.getElementById('modelCardsGrid');
+  grid.innerHTML = entries.map(([name, m], i) => {
+    const f1 = ((2 * m.precision * m.recall) / (m.precision + m.recall)).toFixed(2);
+    const isBest = name === bestModelName;
+    return `
+      <div class="model-detail-card ${isBest ? 'model-best' : ''}">
+        ${isBest ? '<div class="model-best-ribbon">⭐ Best</div>' : ''}
+        <div class="mdc-icon" style="color:${MODEL_COLORS[i]}"><i class="fas ${MODEL_ICONS[name] || 'fa-robot'}"></i></div>
+        <h4>${MODEL_LABELS[name] || name}</h4>
+        <p>${MODEL_DESC[name] || ''}</p>
+        <div class="mdc-stats">
+          <div class="mdc-stat"><span class="mds-val">${m.accuracy}%</span><span class="mds-lbl">Accuracy</span></div>
+          <div class="mdc-stat"><span class="mds-val">${m.precision}%</span><span class="mds-lbl">Precision</span></div>
+          <div class="mdc-stat"><span class="mds-val">${m.recall}%</span><span class="mds-lbl">Recall</span></div>
+          <div class="mdc-stat"><span class="mds-val">${f1}%</span><span class="mds-lbl">F1 Score</span></div>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+loadMetrics();
+</script>
+</body>
+</html>

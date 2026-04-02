@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>SpamShield — AI Spam Detection</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"/>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet"/>
+  <link rel="stylesheet" href="/static/style.css"/>
+</head>
+<body>
+<div class="layout">
+  <!-- SIDEBAR -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-brand" style="flex-direction:column;align-items:center;padding:20px 16px 14px;gap:6px;">
+      <div class="gnk-logo" style="font-size:22px;font-weight:800;letter-spacing:2px;color:#fff;background:linear-gradient(135deg,#2563eb,#7c3aed);border-radius:10px;padding:6px 14px;font-family:Inter,sans-serif;box-shadow:0 2px 10px rgba(37,99,235,0.4);">GNK</div><div class="brand-icon" style="display:none"><i class="fas fa-shield-alt"></i></div>
+      <span class="brand-text">SpamShield</span>
+    </div>
+    <nav class="sidebar-nav">
+      <a href="/" class="nav-item active"><i class="fas fa-home"></i><span>Home</span></a>
+      <a href="/detect" class="nav-item"><i class="fas fa-envelope"></i><span>Detection</span></a>
+      <a href="/preprocess-page" class="nav-item"><i class="fas fa-cogs"></i><span>Preprocessing</span></a>
+      <a href="/models-page" class="nav-item"><i class="fas fa-chart-bar"></i><span>Models</span></a>
+      <a href="/dashboard-page" class="nav-item"><i class="fas fa-chart-line"></i><span>Dashboard</span></a>
+    </nav>
+    <div class="sidebar-footer">
+      <div class="user-info">
+        <div class="user-avatar">AI</div>
+        <div>
+          <div class="user-name">SpamShield v1.0</div>
+          <div class="user-role">ML Powered</div>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <main class="main-content">
+    <div class="topbar">
+      <button class="sidebar-toggle" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button>
+      <div class="topbar-title">
+        <h1>Spam Email Detection System</h1>
+        <p>AI-Powered Spam Message Classification</p>
+      </div>
+      <div class="topbar-actions">
+        <span class="status-badge"><i class="fas fa-circle"></i> Model Active</span>
+      </div>
+    </div>
+
+    <!-- HERO -->
+    <section class="hero-section">
+      <div class="hero-content">
+        <div class="hero-badge"><i class="fas fa-robot"></i> Machine Learning Powered</div>
+        <h2 class="hero-title">Detect Spam with<br/><span class="gradient-text">AI Precision</span></h2>
+        <p class="hero-sub">Advanced NLP pipeline with TF-IDF vectorization and multiple ML models to protect your inbox with 98%+ accuracy.</p>
+        <div class="hero-buttons">
+          <a href="/detect" class="btn-primary-custom"><i class="fas fa-search"></i> Start Detection</a>
+          <a href="/dashboard-page" class="btn-secondary-custom"><i class="fas fa-chart-pie"></i> View Dashboard</a>
+        </div>
+      </div>
+      <div class="hero-visual">
+        <div class="hero-card spam-card">
+          <i class="fas fa-ban"></i>
+          <div>
+            <div class="hc-label">SPAM DETECTED</div>
+            <div class="hc-val">Confidence: 96.4%</div>
+          </div>
+        </div>
+        <div class="hero-card ham-card">
+          <i class="fas fa-check-circle"></i>
+          <div>
+            <div class="hc-label">LEGITIMATE MSG</div>
+            <div class="hc-val">Confidence: 99.1%</div>
+          </div>
+        </div>
+        <div class="hero-stat-ring">
+          <div class="ring-inner">
+            <div class="ring-val">98.6%</div>
+            <div class="ring-label">Accuracy</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- STATS STRIP -->
+    <section class="stats-strip">
+      <div class="stat-item">
+        <div class="stat-num" id="stat-total">5,572</div>
+        <div class="stat-lbl">Training Messages</div>
+      </div>
+      <div class="stat-divider"></div>
+      <div class="stat-item">
+        <div class="stat-num spam-col">747</div>
+        <div class="stat-lbl">Spam Samples</div>
+      </div>
+      <div class="stat-divider"></div>
+      <div class="stat-item">
+        <div class="stat-num ham-col">4,825</div>
+        <div class="stat-lbl">Ham Samples</div>
+      </div>
+      <div class="stat-divider"></div>
+      <div class="stat-item">
+        <div class="stat-num">2</div>
+        <div class="stat-lbl">ML Models</div>
+      </div>
+    </section>
+
+    <!-- FEATURE CARDS -->
+    <section class="features-section">
+      <h3 class="section-title">What SpamShield Offers</h3>
+      <div class="features-grid">
+        <div class="feature-card" onclick="window.location='/detect'">
+          <div class="fc-icon spam-icon"><i class="fas fa-envelope-open-text"></i></div>
+          <h4>Spam Detection</h4>
+          <p>Enter any message and instantly get AI-powered spam classification with confidence scores.</p>
+          <div class="fc-arrow"><i class="fas fa-arrow-right"></i></div>
+        </div>
+        <div class="feature-card" onclick="window.location='/preprocess-page'">
+          <div class="fc-icon blue-icon"><i class="fas fa-project-diagram"></i></div>
+          <h4>Text Preprocessing</h4>
+          <p>Visualize each step of the NLP pipeline — tokenization, stopword removal, and stemming.</p>
+          <div class="fc-arrow"><i class="fas fa-arrow-right"></i></div>
+        </div>
+        <div class="feature-card" onclick="window.location='/models-page'">
+          <div class="fc-icon green-icon"><i class="fas fa-chart-bar"></i></div>
+          <h4>Model Analytics</h4>
+          <p>Compare Naive Bayes and Logistic Regression performance side by side.</p>
+          <div class="fc-arrow"><i class="fas fa-arrow-right"></i></div>
+        </div>
+        <div class="feature-card" onclick="window.location='/dashboard-page'">
+          <div class="fc-icon purple-icon"><i class="fas fa-tachometer-alt"></i></div>
+          <h4>Analytics Dashboard</h4>
+          <p>Deep-dive analytics with charts, word clouds, confusion matrices, and insights.</p>
+          <div class="fc-arrow"><i class="fas fa-arrow-right"></i></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PIPELINE SECTION -->
+    <section class="pipeline-section">
+      <h3 class="section-title">ML Pipeline Overview</h3>
+      <div class="pipeline-steps">
+        <div class="pipe-step">
+          <div class="ps-num">01</div>
+          <div class="ps-icon"><i class="fas fa-keyboard"></i></div>
+          <div class="ps-label">Input Text</div>
+        </div>
+        <div class="pipe-arrow"><i class="fas fa-chevron-right"></i></div>
+        <div class="pipe-step">
+          <div class="ps-num">02</div>
+          <div class="ps-icon"><i class="fas fa-broom"></i></div>
+          <div class="ps-label">Preprocess</div>
+        </div>
+        <div class="pipe-arrow"><i class="fas fa-chevron-right"></i></div>
+        <div class="pipe-step">
+          <div class="ps-num">03</div>
+          <div class="ps-icon"><i class="fas fa-vector-square"></i></div>
+          <div class="ps-label">TF-IDF</div>
+        </div>
+        <div class="pipe-arrow"><i class="fas fa-chevron-right"></i></div>
+        <div class="pipe-step">
+          <div class="ps-num">04</div>
+          <div class="ps-icon"><i class="fas fa-brain"></i></div>
+          <div class="ps-label">ML Model</div>
+        </div>
+        <div class="pipe-arrow"><i class="fas fa-chevron-right"></i></div>
+        <div class="pipe-step active">
+          <div class="ps-num">05</div>
+          <div class="ps-icon"><i class="fas fa-flag"></i></div>
+          <div class="ps-label">Result</div>
+        </div>
+      </div>
+    </section>
+  </main>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="/static/app.js"></script>
+<script>
+  fetch('/stats').then(r=>r.json()).then(d=>{
+    document.getElementById('stat-total').textContent = d.total.toLocaleString();
+  });
+</script>
+</body>
+</html>

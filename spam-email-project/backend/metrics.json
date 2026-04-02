@@ -1,0 +1,20 @@
+{
+  "naive_bayes": {
+    "accuracy": 97.49,
+    "precision": 100.0,
+    "recall": 81.33,
+    "confusion_matrix": [
+      [965, 0],
+      [28, 122]
+    ]
+  },
+  "logistic_regression": {
+    "accuracy": 95.61,
+    "precision": 97.2,
+    "recall": 69.33,
+    "confusion_matrix": [
+      [962, 3],
+      [46, 104]
+    ]
+  }
+}

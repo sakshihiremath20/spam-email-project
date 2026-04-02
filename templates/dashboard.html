@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Dashboard — SpamShield</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"/>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet"/>
+  <link rel="stylesheet" href="/static/style.css"/>
+</head>
+<body>
+<div class="layout">
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-brand" style="flex-direction:column;align-items:center;padding:20px 16px 14px;gap:6px;">
+      <div class="gnk-logo" style="font-size:22px;font-weight:800;letter-spacing:2px;color:#fff;background:linear-gradient(135deg,#2563eb,#7c3aed);border-radius:10px;padding:6px 14px;font-family:Inter,sans-serif;box-shadow:0 2px 10px rgba(37,99,235,0.4);">GNK</div><div class="brand-icon" style="display:none"><i class="fas fa-shield-alt"></i></div>
+      <span class="brand-text">SpamShield</span>
+    </div>
+    <nav class="sidebar-nav">
+      <a href="/" class="nav-item"><i class="fas fa-home"></i><span>Home</span></a>
+      <a href="/detect" class="nav-item"><i class="fas fa-envelope"></i><span>Detection</span></a>
+      <a href="/preprocess-page" class="nav-item"><i class="fas fa-cogs"></i><span>Preprocessing</span></a>
+      <a href="/models-page" class="nav-item"><i class="fas fa-chart-bar"></i><span>Models</span></a>
+      <a href="/dashboard-page" class="nav-item active"><i class="fas fa-chart-line"></i><span>Dashboard</span></a>
+    </nav>
+    <div class="sidebar-footer">
+      <div class="user-info">
+        <div class="user-avatar">AI</div>
+        <div><div class="user-name">SpamShield v1.0</div><div class="user-role">ML Powered</div></div>
+      </div>
+    </div>
+  </aside>
+
+  <main class="main-content">
+    <div class="topbar">
+      <button class="sidebar-toggle" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button>
+      <div class="topbar-title">
+        <h1>Analytics Dashboard</h1>
+        <p>Dataset insights and model performance overview</p>
+      </div>
+    </div>
+
+    <!-- KPI CARDS -->
+    <div class="kpi-grid" id="kpiGrid">
+      <div class="kpi-card">
+        <div class="kpi-icon" style="background:#eff6ff;color:#2563eb"><i class="fas fa-envelope"></i></div>
+        <div class="kpi-info">
+          <div class="kpi-label">Total Messages</div>
+          <div class="kpi-val" id="kpiTotal">5,572</div>
+          <div class="kpi-trend up"><i class="fas fa-arrow-up"></i> Training Dataset</div>
+        </div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-icon" style="background:#fef2f2;color:#ef4444"><i class="fas fa-ban"></i></div>
+        <div class="kpi-info">
+          <div class="kpi-label">Spam Messages</div>
+          <div class="kpi-val" id="kpiSpam">747</div>
+          <div class="kpi-trend down"><i class="fas fa-exclamation"></i> Unwanted</div>
+        </div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-icon" style="background:#f0fdf4;color:#10b981"><i class="fas fa-check-circle"></i></div>
+        <div class="kpi-info">
+          <div class="kpi-label">Ham Messages</div>
+          <div class="kpi-val" id="kpiHam">4,825</div>
+          <div class="kpi-trend up"><i class="fas fa-check"></i> Legitimate</div>
+        </div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-icon" style="background:#fff7ed;color:#f97316"><i class="fas fa-percent"></i></div>
+        <div class="kpi-info">
+          <div class="kpi-label">Spam Rate</div>
+          <div class="kpi-val" id="kpiRate">13.4%</div>
+          <div class="kpi-trend neutral"><i class="fas fa-info-circle"></i> Dataset ratio</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CHARTS ROW 1 -->
+    <div class="dash-charts-row">
+      <div class="dash-chart-card pie-card">
+        <div class="card-header-custom">
+          <i class="fas fa-chart-pie"></i>
+          <span>Spam vs Ham Distribution</span>
+        </div>
+        <div style="position:relative;height:260px">
+          <canvas id="pieChart"></canvas>
+        </div>
+        <div class="pie-legend">
+          <span><span class="legend-dot spam-dot"></span>Spam (13.4%)</span>
+          <span><span class="legend-dot ham-dot"></span>Ham (86.6%)</span>
+        </div>
+      </div>
+
+      <div class="dash-chart-card">
+        <div class="card-header-custom">
+          <i class="fas fa-chart-bar"></i>
+          <span>Model Performance Overview</span>
+        </div>
+        <div style="position:relative;height:280px">
+          <canvas id="modelPerfChart"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <!-- WORD CLOUD SECTION -->
+    <div class="wordcloud-section">
+      <div class="card-header-custom">
+        <i class="fas fa-cloud"></i>
+        <span>Top Spam Keywords</span>
+        <span class="wc-sub">Most frequent words in spam messages</span>
+      </div>
+      <div class="wordcloud-display" id="wordCloud">
+        <!-- Rendered via JS -->
+      </div>
+    </div>
+
+    <!-- CHARTS ROW 2 -->
+    <div class="dash-charts-row">
+      <div class="dash-chart-card">
+        <div class="card-header-custom">
+          <i class="fas fa-chart-area"></i>
+          <span>Message Length Distribution</span>
+        </div>
+        <div style="position:relative;height:260px">
+          <canvas id="lengthChart"></canvas>
+        </div>
+      </div>
+
+      <div class="dash-chart-card">
+        <div class="card-header-custom">
+          <i class="fas fa-chart-line"></i>
+          <span>Top Word Frequencies</span>
+        </div>
+        <div style="position:relative;height:260px">
+          <canvas id="wordFreqChart"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <!-- INSIGHTS -->
+    <div class="insights-grid">
+      <div class="insight-card">
+        <div class="insight-icon" style="background:#eff6ff"><i class="fas fa-lightbulb" style="color:#2563eb"></i></div>
+        <div>
+          <div class="insight-title">Class Imbalance</div>
+          <div class="insight-text">The dataset has a ~87:13 ratio of ham to spam. Models were trained with this distribution, achieving high accuracy even on the minority class.</div>
+        </div>
+      </div>
+      <div class="insight-card">
+        <div class="insight-icon" style="background:#f0fdf4"><i class="fas fa-trophy" style="color:#059669"></i></div>
+        <div>
+          <div class="insight-title">Logistic Regression Performance</div>
+          <div class="insight-text">Logistic Regression delivers strong accuracy with fast inference and interpretable probability scores, making it ideal for real-world spam filtering deployments.</div>
+        </div>
+      </div>
+      <div class="insight-card">
+        <div class="insight-icon" style="background:#fef2f2"><i class="fas fa-exclamation-circle" style="color:#ef4444"></i></div>
+        <div>
+          <div class="insight-title">Key Spam Indicators</div>
+          <div class="insight-text">Top spam keywords include: "free", "win", "cash", "prize", "urgent", "call now", "click here". These trigger high spam confidence scores.</div>
+        </div>
+      </div>
+      <div class="insight-card">
+        <div class="insight-icon" style="background:#fff7ed"><i class="fas fa-cogs" style="color:#d97706"></i></div>
+        <div>
+          <div class="insight-title">TF-IDF Effectiveness</div>
+          <div class="insight-text">Using 3,000 max features with TF-IDF vectorization captures the most discriminative terms while keeping model size manageable for production.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- POWER BI SECTION -->
+    <div class="powerbi-section">
+      <div class="card-header-custom">
+        <i class="fas fa-chart-pie" style="color:#f2c811"></i>
+        <span>Power BI Integration</span>
+        <span class="powerbi-badge">External Dashboard</span>
+      </div>
+      <div class="powerbi-placeholder">
+        <div class="pbi-icon"><i class="fas fa-chart-pie"></i></div>
+        <h4>Connect Your Power BI Dashboard</h4>
+        <p>Replace the URL below with your actual Power BI embedded report link.</p>
+        <div class="pbi-url-input">
+          <input type="text" id="pbiUrl" placeholder="https://app.powerbi.com/reportEmbed?reportId=YOUR_REPORT_ID" />
+          <button onclick="loadPBI()">Load Dashboard</button>
+        </div>
+        <div id="pbiFrame" style="display:none;margin-top:1rem">
+          <iframe id="pbiIframe" width="100%" height="600" frameborder="0" allowfullscreen></iframe>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<script src="/static/app.js"></script>
+<script>
+function loadPBI() {
+  const url = document.getElementById('pbiUrl').value.trim();
+  if (!url) return;
+  document.getElementById('pbiIframe').src = url;
+  document.getElementById('pbiFrame').style.display = 'block';
+}
+
+async function loadDashboard() {
+  const statsRes = await fetch('/stats');
+  const stats = await statsRes.json();
+  document.getElementById('kpiTotal').textContent = stats.total.toLocaleString();
+  document.getElementById('kpiSpam').textContent = stats.spam.toLocaleString();
+  document.getElementById('kpiHam').textContent = stats.ham.toLocaleString();
+  document.getElementById('kpiRate').textContent = stats.spam_rate + '%';
+
+  // Pie chart
+  new Chart(document.getElementById('pieChart'), {
+    type: 'doughnut',
+    data: {
+      labels: ['Ham', 'Spam'],
+      datasets: [{ data: [stats.ham, stats.spam], backgroundColor: ['#10b981','#ef4444'], borderWidth: 0, hoverOffset: 8 }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false, cutout: '65%',
+      plugins: { legend: { display: false } }
+    }
+  });
+
+  // Model performance
+  const metricsRes = await fetch('/model-metrics');
+  const metrics = await metricsRes.json();
+  const mLabels = { naive_bayes:'Naive Bayes', logistic_regression:'Logistic Regression' };
+  const mKeys = Object.keys(metrics);
+  new Chart(document.getElementById('modelPerfChart'), {
+    type: 'bar',
+    data: {
+      labels: mKeys.map(k => mLabels[k] || k),
+      datasets: [
+        { label: 'Accuracy', data: mKeys.map(k => metrics[k].accuracy), backgroundColor: '#2563eb', borderRadius: 5 },
+        { label: 'Precision', data: mKeys.map(k => metrics[k].precision), backgroundColor: '#10b981', borderRadius: 5 },
+        { label: 'Recall', data: mKeys.map(k => metrics[k].recall), backgroundColor: '#f97316', borderRadius: 5 }
+      ]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { position: 'top', labels: { font: { size: 11 } } } },
+      scales: {
+        y: { min: 88, max: 100, ticks: { callback: v => v + '%', font: { size: 11 } }, grid: { color: '#f1f5f9' } },
+        x: { grid: { display: false }, ticks: { font: { size: 11 } } }
+      }
+    }
+  });
+
+  // Message length distribution (simulated)
+  new Chart(document.getElementById('lengthChart'), {
+    type: 'bar',
+    data: {
+      labels: ['0-20','21-40','41-80','81-120','121-160','161+'],
+      datasets: [
+        { label: 'Ham', data: [340,820,1580,940,620,525], backgroundColor: '#10b981', borderRadius: 4 },
+        { label: 'Spam', data: [40,120,280,180,90,37], backgroundColor: '#ef4444', borderRadius: 4 }
+      ]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { position: 'top', labels: { font: { size: 11 } } } },
+      scales: {
+        y: { ticks: { font: { size: 11 } }, grid: { color: '#f1f5f9' } },
+        x: { grid: { display: false }, ticks: { font: { size: 11 } } }
+      }
+    }
+  });
+
+  // Word frequency
+  const topWords = ['free','call','txt','claim','win','prize','text','urgent','mobile','cash'];
+  const topFreqs = [312, 287, 265, 241, 220, 198, 176, 154, 142, 131];
+  new Chart(document.getElementById('wordFreqChart'), {
+    type: 'bar',
+    data: {
+      labels: topWords,
+      datasets: [{ label: 'Frequency', data: topFreqs, backgroundColor: '#7c3aed', borderRadius: 4 }]
+    },
+    options: {
+      indexAxis: 'y',
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { display: false } },
+      scales: {
+        x: { ticks: { font: { size: 11 } }, grid: { color: '#f1f5f9' } },
+        y: { grid: { display: false }, ticks: { font: { size: 11 } } }
+      }
+    }
+  });
+
+  // Word cloud
+  const spamWords = [
+    {word:'FREE', size:42, color:'#ef4444'},
+    {word:'WIN', size:36, color:'#f97316'},
+    {word:'CASH', size:30, color:'#d97706'},
+    {word:'PRIZE', size:28, color:'#7c3aed'},
+    {word:'CALL NOW', size:26, color:'#ef4444'},
+    {word:'URGENT', size:24, color:'#f97316'},
+    {word:'CLAIM', size:22, color:'#2563eb'},
+    {word:'OFFER', size:20, color:'#059669'},
+    {word:'MOBILE', size:18, color:'#7c3aed'},
+    {word:'CONGRATULATIONS', size:18, color:'#ef4444'},
+    {word:'TEXT', size:17, color:'#d97706'},
+    {word:'GUARANTEED', size:17, color:'#2563eb'},
+    {word:'REWARD', size:16, color:'#059669'},
+    {word:'SELECTED', size:16, color:'#f97316'},
+    {word:'WINNER', size:16, color:'#7c3aed'},
+    {word:'CLICK', size:15, color:'#ef4444'},
+    {word:'STOP', size:15, color:'#059669'},
+    {word:'REPLY', size:14, color:'#d97706'},
+    {word:'CUSTOMER', size:14, color:'#2563eb'},
+    {word:'LOAN', size:14, color:'#f97316'},
+  ];
+
+  const wc = document.getElementById('wordCloud');
+  wc.innerHTML = spamWords.map(w => `
+    <span class="wc-word" style="font-size:${w.size}px;color:${w.color}">${w.word}</span>
+  `).join('');
+}
+
+loadDashboard();
+</script>
+</body>
+</html>

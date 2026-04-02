@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Preprocessing — SpamShield</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"/>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet"/>
+  <link rel="stylesheet" href="/static/style.css"/>
+</head>
+<body>
+<div class="layout">
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-brand" style="flex-direction:column;align-items:center;padding:20px 16px 14px;gap:6px;">
+      <div class="gnk-logo" style="font-size:22px;font-weight:800;letter-spacing:2px;color:#fff;background:linear-gradient(135deg,#2563eb,#7c3aed);border-radius:10px;padding:6px 14px;font-family:Inter,sans-serif;box-shadow:0 2px 10px rgba(37,99,235,0.4);">GNK</div><div class="brand-icon" style="display:none"><i class="fas fa-shield-alt"></i></div>
+      <span class="brand-text">SpamShield</span>
+    </div>
+    <nav class="sidebar-nav">
+      <a href="/" class="nav-item"><i class="fas fa-home"></i><span>Home</span></a>
+      <a href="/detect" class="nav-item"><i class="fas fa-envelope"></i><span>Detection</span></a>
+      <a href="/preprocess-page" class="nav-item active"><i class="fas fa-cogs"></i><span>Preprocessing</span></a>
+      <a href="/models-page" class="nav-item"><i class="fas fa-chart-bar"></i><span>Models</span></a>
+      <a href="/dashboard-page" class="nav-item"><i class="fas fa-chart-line"></i><span>Dashboard</span></a>
+    </nav>
+    <div class="sidebar-footer">
+      <div class="user-info">
+        <div class="user-avatar">AI</div>
+        <div>
+          <div class="user-name">SpamShield v1.0</div>
+          <div class="user-role">ML Powered</div>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <main class="main-content">
+    <div class="topbar">
+      <button class="sidebar-toggle" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button>
+      <div class="topbar-title">
+        <h1>Text Preprocessing</h1>
+        <p>Visualize each step of the NLP pipeline</p>
+      </div>
+    </div>
+
+    <!-- INFO BANNER -->
+    <div class="info-banner">
+      <i class="fas fa-info-circle"></i>
+      <span>Enter any message below to see how the NLP pipeline transforms it step by step before feeding to the ML model.</span>
+    </div>
+
+    <!-- INPUT -->
+    <div class="pp-input-card">
+      <textarea id="ppInput" class="pp-textarea" placeholder="Enter your message to visualize preprocessing...">Congratulations! You won a FREE iPhone! Click here NOW to claim your AMAZING prize worth $1000!!!</textarea>
+      <div class="pp-actions">
+        <button class="btn-predict" onclick="runPreprocess()">
+          <i class="fas fa-play"></i> Run Pipeline
+        </button>
+        <button class="btn-clear" onclick="document.getElementById('ppInput').value='';">
+          <i class="fas fa-eraser"></i> Clear
+        </button>
+      </div>
+    </div>
+
+    <!-- PIPELINE VISUAL -->
+    <div class="pipeline-info-row">
+      <div class="pi-card"><i class="fas fa-font" style="color:#2563eb"></i><span>Lowercase</span></div>
+      <i class="fas fa-arrow-right pi-arrow"></i>
+      <div class="pi-card"><i class="fas fa-cut" style="color:#7c3aed"></i><span>Clean</span></div>
+      <i class="fas fa-arrow-right pi-arrow"></i>
+      <div class="pi-card"><i class="fas fa-list" style="color:#0891b2"></i><span>Tokenize</span></div>
+      <i class="fas fa-arrow-right pi-arrow"></i>
+      <div class="pi-card"><i class="fas fa-filter" style="color:#d97706"></i><span>Stopwords</span></div>
+      <i class="fas fa-arrow-right pi-arrow"></i>
+      <div class="pi-card"><i class="fas fa-compress-alt" style="color:#059669"></i><span>Stem</span></div>
+    </div>
+
+    <!-- TIMELINE STEPS -->
+    <div class="timeline-container" id="timelineContainer">
+      <div class="timeline-placeholder">
+        <i class="fas fa-magic"></i>
+        <p>Run the pipeline to see preprocessing steps</p>
+      </div>
+    </div>
+
+    <!-- TOKEN STATS (shown after processing) -->
+    <div id="tokenStats" style="display:none">
+      <h3 class="section-title">Token Analysis</h3>
+      <div class="token-stats-grid">
+        <div class="ts-card">
+          <div class="ts-num" id="tsTotal">0</div>
+          <div class="ts-label">Original Tokens</div>
+        </div>
+        <div class="ts-card">
+          <div class="ts-num" id="tsRemoved">0</div>
+          <div class="ts-label">Stopwords Removed</div>
+        </div>
+        <div class="ts-card">
+          <div class="ts-num" id="tsKept">0</div>
+          <div class="ts-label">Tokens After Filter</div>
+        </div>
+        <div class="ts-card">
+          <div class="ts-num" id="tsStemmed">0</div>
+          <div class="ts-label">Stemmed Tokens</div>
+        </div>
+      </div>
+
+      <!-- Token comparison table -->
+      <div class="token-table-card">
+        <div class="card-header-custom">
+          <i class="fas fa-table"></i>
+          <span>Token Transformation Table</span>
+        </div>
+        <div class="token-table-wrap">
+          <table class="token-table" id="tokenTable">
+            <thead><tr><th>#</th><th>Original Token</th><th>Stemmed</th><th>Kept?</th></tr></thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="/static/app.js"></script>
+<script>
+const stepConfig = [
+  { key: 'original_text',  icon: 'fa-file-alt',     color: '#6366f1', label: 'Step 1 — Original Text',     desc: 'Raw input message as entered by the user.' },
+  { key: 'lowercased',     icon: 'fa-font',          color: '#2563eb', label: 'Step 2 — Lowercased',         desc: 'All characters converted to lowercase for uniformity.' },
+  { key: 'tokens',         icon: 'fa-list',          color: '#0891b2', label: 'Step 3 — Tokenized',          desc: 'Text split into individual word tokens.' },
+  { key: 'cleaned_text',   icon: 'fa-filter',        color: '#d97706', label: 'Step 4 — Stopwords Removed',  desc: 'Common stopwords and short tokens filtered out.' },
+  { key: 'stemmed_text',   icon: 'fa-compress-alt',  color: '#059669', label: 'Step 5 — Stemmed',            desc: 'Words reduced to root form using Porter Stemmer.' },
+  { key: 'final_text',     icon: 'fa-check-double',  color: '#7c3aed', label: 'Step 6 — Final Vector Input', desc: 'Cleaned text ready for TF-IDF vectorization.' }
+];
+
+async function runPreprocess() {
+  const msg = document.getElementById('ppInput').value.trim();
+  if (!msg) { alert('Enter a message first.'); return; }
+
+  const res = await fetch('/preprocess', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ message: msg })
+  });
+  const d = await res.json();
+
+  const container = document.getElementById('timelineContainer');
+  container.innerHTML = '';
+
+  stepConfig.forEach((step, i) => {
+    const val = d[step.key];
+    const displayVal = Array.isArray(val) ? val.join(', ') : val;
+    const count = Array.isArray(val) ? val.length : (typeof val === 'string' ? val.split(' ').length : '—');
+
+    const el = document.createElement('div');
+    el.className = 'timeline-step';
+    el.style.animationDelay = (i * 0.1) + 's';
+    el.innerHTML = `
+      <div class="tl-dot" style="background:${step.color}">
+        <i class="fas ${step.icon}"></i>
+      </div>
+      <div class="tl-line"></div>
+      <div class="tl-card">
+        <div class="tl-header">
+          <span class="tl-step-label" style="color:${step.color}">${step.label}</span>
+          <span class="tl-count">${count} tokens</span>
+        </div>
+        <div class="tl-desc">${step.desc}</div>
+        <div class="tl-value">${displayVal || '(empty)'}</div>
+      </div>
+    `;
+    container.appendChild(el);
+  });
+
+  // Token stats
+  const orig = d.tokens.length;
+  const kept = d.cleaned_text.length;
+  const removed = orig - kept;
+  document.getElementById('tsTotal').textContent = orig;
+  document.getElementById('tsRemoved').textContent = removed;
+  document.getElementById('tsKept').textContent = kept;
+  document.getElementById('tsStemmed').textContent = d.stemmed_text.length;
+  document.getElementById('tokenStats').style.display = 'block';
+
+  // Token table
+  const tbody = document.querySelector('#tokenTable tbody');
+  tbody.innerHTML = d.tokens.map((tok, i) => {
+    const stemIdx = d.cleaned_text.indexOf(tok);
+    const kept = stemIdx !== -1;
+    const stemmed = kept ? d.stemmed_text[stemIdx] || tok : '—';
+    return `
+      <tr>
+        <td>${i + 1}</td>
+        <td><code>${tok}</code></td>
+        <td><code>${stemmed}</code></td>
+        <td><span class="${kept ? 'tag-kept' : 'tag-removed'}">${kept ? '✓ Kept' : '✗ Removed'}</span></td>
+      </tr>
+    `;
+  }).join('');
+}
+
+// Auto-run on load
+window.addEventListener('DOMContentLoaded', runPreprocess);
+</script>
+</body>
+</html>
